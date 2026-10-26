@@ -12,4 +12,4 @@ lfx_crowdfunding: # Replace with a single LFX Crowdfunding project-name e.g., cl
 polar: # Replace with a single Polar username
 buy_me_a_coffee: # Replace with a single Buy Me a Coffee username
 thanks_dev: # Replace with a single thanks.dev username
-custom: ['bitcoin:bc1p6gzd3se55z2n9p4s0uvxkc52jzjmnnnq4merd82lnegyds3atxuqjg3wjz', 'https://trocador.app/anonpay/?ticker_to=btc&network_to=Mainnet&address=bc1p6gzd3se55z2n9p4s0uvxkc52jzjmnnnq4merd82lnegyds3atxuqjg3wjz&donation=True&simple_mode=False&amount=0.0001&name=Jackie&description=%5B+Jackie+%5D+%211x0%21+%5B+Thanks+%5D&email=pyxmr2025@openenet.cn&bgcolor=00000000&direct=True']
+custom: ['https://trocador.app/anonpay/?ticker_to=btc&network_to=Mainnet&address=bc1p6gzd3se55z2n9p4s0uvxkc52jzjmnnnq4merd82lnegyds3atxuqjg3wjz&donation=True&simple_mode=False&amount=0.0001&name=Jackie&description=%5B+Jackie+%5D+%211x0%21+%5B+Thanks+%5D&email=pyxmr2025@openenet.cn&bgcolor=00000000&direct=True']
