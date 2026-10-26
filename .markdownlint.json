@@ -1,0 +1,26 @@
+{
+  "MD004": false,
+  "MD007": false,
+  "MD012": false,
+  "MD013": false,
+  "MD030": false,
+  "MD031": false,
+  "MD032": false,
+  "MD033": {
+    "allowed_elements": [
+      "b",
+      "br",
+      "details",
+      "div",
+      "em",
+      "img",
+      "kbd",
+      "script",
+      "span",
+      "summary"
+    ]
+  },
+  "MD036": false,
+  "MD040": false,
+  "MD046": false
+}
