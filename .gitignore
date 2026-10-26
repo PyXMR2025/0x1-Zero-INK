@@ -1,0 +1,91 @@
+# ==============================
+# Python
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+.pytype/
+*.manifest
+
+# ==============================
+# Virtual Environments
+# ==============================
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ==============================
+# MkDocs / Zensical
+# ==============================
+# Build output (defaults to site/)
+site/
+
+# Build cache (zensical build --clean clears this)
+.cache/
+.zensical/
+
+# ==============================
+# Environment Variables
+# ==============================
+.env
+.env.local
+.env.*.local
+
+# ==============================
+# IDE / Editor
+# ==============================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# ==============================
+# Operating System
+# ==============================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ==============================
+# Logs
+# ==============================
+*.log
+logs/
