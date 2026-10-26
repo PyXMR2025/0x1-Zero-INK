@@ -1,0 +1,15 @@
+# These are supported funding model platforms
+
+github: # Replace with up to 4 GitHub Sponsors-enabled usernames e.g., [user1, user2]
+patreon: # Replace with a single Patreon username
+open_collective: # Replace with a single Open Collective username
+ko_fi: # Replace with a single Ko-fi username
+tidelift: # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
+community_bridge: # Replace with a single Community Bridge project-name e.g., cloud-foundry
+liberapay: # Replace with a single Liberapay username
+issuehunt: # Replace with a single IssueHunt username
+lfx_crowdfunding: # Replace with a single LFX Crowdfunding project-name e.g., cloud-foundry
+polar: # Replace with a single Polar username
+buy_me_a_coffee: # Replace with a single Buy Me a Coffee username
+thanks_dev: # Replace with a single thanks.dev username
+custom: ['bitcoin:bc1p6gzd3se55z2n9p4s0uvxkc52jzjmnnnq4merd82lnegyds3atxuqjg3wjz', 'https://trocador.app/anonpay/?ticker_to=btc&network_to=Mainnet&address=bc1p6gzd3se55z2n9p4s0uvxkc52jzjmnnnq4merd82lnegyds3atxuqjg3wjz&donation=True&simple_mode=False&amount=0.0001&name=Jackie&description=%5B+Jackie+%5D+%211x0%21+%5B+Thanks+%5D&email=pyxmr2025@openenet.cn&bgcolor=00000000&direct=True']
