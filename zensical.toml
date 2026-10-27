@@ -1,14 +1,14 @@
 [project]
-site_url = "https://www.example.com/"
-site_name = "Documentation"
-# site_description = "Your project description"
-# site_author = "Your name"
+site_url = "https://blog.zjackie.ink/"
+site_name = "0x1 ZeroINK"
+site_description = ""
+site_author = "Jackie"
 
-# copyright = "Copyright &copy; 2026 Your name"
+copyright = "Copyright &copy; 2026 Jackie"
 
-# repo_url = "https://github.com/user/repo"
-# repo_name = "user/repo"
-# edit_uri = "edit/main/docs/"
+repo_url = "https://github.com/PyXMR2025/0x1-ZeroINK"
+repo_name = "PyXMR2025/0x1-ZeroINK"
+edit_uri = "edit/main/docs/"
 
 nav = [
   { "Get started" = "index.md" },
@@ -78,9 +78,9 @@ scheme = "slate"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to system preference"
 
-# [[project.extra.social]]
-# icon = "fontawesome/brands/github"
-# link = "https://github.com/user/repo"
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/PyXMR2025/0x1-ZeroINK"
 
 # [[project.extra.social]]
 # icon = "fontawesome/brands/mastodon"
