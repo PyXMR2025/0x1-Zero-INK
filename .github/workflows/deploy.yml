@@ -45,4 +45,4 @@ jobs:
           user_email: 41898282+github-actions[bot]@users.noreply.github.com
           commit_message: "deploy: ${{ github.sha }}"
           # Uncomment when the custom domain is configured in GitHub Pages:
-          # cname: blog.zjackie.ink
+          cname: blog.zjackie.ink
