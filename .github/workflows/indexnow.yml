@@ -1,0 +1,84 @@
+name: IndexNow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    name: Submit updated pages to IndexNow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed pages and build URL list
+        id: urls
+        shell: bash
+        run: |
+          BASE="https://blog.zjackie.ink"
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # Manual run: submit every page
+            FILES=$(git ls-files -- 'docs/*.md' 'docs/**/*.md')
+          else
+            BEFORE="${{ github.event.before }}"
+            if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              BEFORE="HEAD~1"
+            fi
+            # Include deletions: submitting a 404 URL tells engines to de-index it
+            FILES=$(git diff --name-only --diff-filter=ACMRD "$BEFORE" HEAD -- 'docs/**' | grep -E '^docs/.+\.md$' || true)
+          fi
+
+          if [ -z "$FILES" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "No page changes detected, nothing to submit."
+            exit 0
+          fi
+
+          URLS=()
+          while IFS= read -r f; do
+            rel="${f#docs/}"
+            if [ "$rel" = "index.md" ]; then
+              url="$BASE/"
+            else
+              url="$BASE/${rel%.md}/"
+            fi
+            URLS+=("$url")
+            echo "Queued: $url"
+          done <<< "$FILES"
+
+          json=$(printf '%s\n' "${URLS[@]}" | jq -R . | jq -sc .)
+          echo "list=$json" >> "$GITHUB_OUTPUT"
+
+      - name: Submit to IndexNow
+        if: steps.urls.outputs.skip != 'true'
+        env:
+          INDEX_NOW_API_KEY: ${{ secrets.INDEX_NOW_API_KEY }}
+        run: |
+          response=$(curl -sS -w "\n%{http_code}" -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d "{
+              \"host\": \"blog.zjackie.ink\",
+              \"key\": \"${INDEX_NOW_API_KEY}\",
+              \"keyLocation\": \"https://blog.zjackie.ink/${INDEX_NOW_API_KEY}.txt\",
+              \"urlList\": ${{ steps.urls.outputs.list }}
+            }")
+
+          body=$(echo "$response" | head -n -1)
+          code=$(echo "$response" | tail -n 1)
+          echo "IndexNow response ($code): $body"
+
+          case "$code" in
+            200|202) echo "Submitted successfully." ;;
+            *) echo "::error::IndexNow submission failed with HTTP $code"; exit 1 ;;
+          esac
