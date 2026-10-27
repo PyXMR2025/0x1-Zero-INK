@@ -84,15 +84,25 @@ jobs:
         if: steps.wait.outputs.skip != 'true'
         env:
           INDEX_NOW_API_KEY: ${{ secrets.INDEX_NOW_API_KEY }}
+          URL_LIST: ${{ steps.urls.outputs.list }}
         run: |
+          if [ -z "$INDEX_NOW_API_KEY" ]; then
+            echo "::error::Secret INDEX_NOW_API_KEY is empty. Set it in Settings → Secrets and variables → Actions (repository secrets, not environment secrets)."
+            exit 1
+          fi
+          echo "Key length: ${#INDEX_NOW_API_KEY}"
+          echo "URL count: $(jq length <<< "$URL_LIST")"
+
+          jq -n \
+            --arg host "blog.zjackie.ink" \
+            --arg key "$INDEX_NOW_API_KEY" \
+            --arg keyLocation "https://blog.zjackie.ink/${INDEX_NOW_API_KEY}.txt" \
+            --argjson urlList "$URL_LIST" \
+            '{host: $host, key: $key, keyLocation: $keyLocation, urlList: $urlList}' > payload.json
+
           response=$(curl -sS -w "\n%{http_code}" -X POST "https://api.indexnow.org/indexnow" \
             -H "Content-Type: application/json; charset=utf-8" \
-            -d "{
-              \"host\": \"blog.zjackie.ink\",
-              \"key\": \"${INDEX_NOW_API_KEY}\",
-              \"keyLocation\": \"https://blog.zjackie.ink/${INDEX_NOW_API_KEY}.txt\",
-              \"urlList\": ${{ steps.urls.outputs.list }}
-            }")
+            --data-binary @payload.json)
 
           body=$(echo "$response" | head -n -1)
           code=$(echo "$response" | tail -n 1)
