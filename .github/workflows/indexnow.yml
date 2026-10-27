@@ -8,60 +8,37 @@ on:
       - "docs/**"
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   submit:
-    name: Submit updated pages to IndexNow
+    name: Submit sitemap URLs to IndexNow
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 2
-
-      - name: Detect changed pages and build URL list
+      - name: Fetch sitemap and build URL list
         id: urls
         shell: bash
         run: |
-          BASE="https://blog.zjackie.ink"
+          for i in 1 2 3; do
+            SITEMAP=$(curl -fsS "https://blog.zjackie.ink/sitemap.xml") && break
+            echo "Fetch failed (attempt $i), retrying in 20s..."
+            sleep 20
+          done
 
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            # Manual run: submit every page
-            FILES=$(git ls-files -- 'docs/*.md' 'docs/**/*.md')
-          else
-            BEFORE="${{ github.event.before }}"
-            if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-              BEFORE="HEAD~1"
-            fi
-            # Include deletions: submitting a 404 URL tells engines to de-index it
-            FILES=$(git diff --name-only --diff-filter=ACMRD "$BEFORE" HEAD -- 'docs/**' | grep -E '^docs/.+\.md$' || true)
+          if [ -z "$SITEMAP" ]; then
+            echo "::error::Could not fetch sitemap.xml"
+            exit 1
           fi
 
-          if [ -z "$FILES" ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "No page changes detected, nothing to submit."
-            exit 0
+          LIST=$(echo "$SITEMAP" | grep -oP '(?<=<loc>)[^<]+' | grep -v '/404' | jq -R . | jq -sc .)
+
+          if [ "$LIST" = "[]" ]; then
+            echo "::error::No URLs found in sitemap.xml"
+            exit 1
           fi
 
-          URLS=()
-          while IFS= read -r f; do
-            rel="${f#docs/}"
-            if [ "$rel" = "index.md" ]; then
-              url="$BASE/"
-            else
-              url="$BASE/${rel%.md}/"
-            fi
-            URLS+=("$url")
-            echo "Queued: $url"
-          done <<< "$FILES"
-
-          json=$(printf '%s\n' "${URLS[@]}" | jq -R . | jq -sc .)
-          echo "list=$json" >> "$GITHUB_OUTPUT"
+          echo "list=$LIST" >> "$GITHUB_OUTPUT"
+          echo "$LIST" | jq -r '.[]' | while read -r u; do echo "Queued: $u"; done
 
       - name: Submit to IndexNow
-        if: steps.urls.outputs.skip != 'true'
         env:
           INDEX_NOW_API_KEY: ${{ secrets.INDEX_NOW_API_KEY }}
         run: |
