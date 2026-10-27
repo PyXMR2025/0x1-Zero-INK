@@ -2,7 +2,7 @@
 
 > [Jackie](https://github.com/PyXMR2025)'s personal blog, built with modern static site generators and hosted on GitHub Pages and Cloudflare.
 
-> **URL**: [https://blog.zjackie.ink](https://blog.zjackie.ink)
+**URL**: [https://blog.zjackie.ink](https://blog.zjackie.ink)
 
 [![License: Code MIT](https://img.shields.io/badge/License-Code%20MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![License: Content CC BY-SA 4.0](https://img.shields.io/badge/License-Content%20CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
