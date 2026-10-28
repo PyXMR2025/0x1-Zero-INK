@@ -31,22 +31,29 @@ jobs:
         run: |
           sha='${{ github.event.workflow_run.head_sha }}'
           [ -z "$sha" ] && sha='${{ github.sha }}'
+          # Pages builds the gh-pages deploy commit, not this SHA, so the match
+          # below is time-based: wait for a Pages build finished AFTER Deploy did.
+          baseline='${{ github.event.workflow_run.updated_at }}'
+          [ -z "$baseline" ] && baseline=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
-          echo "Deployed commit: $sha"
+          echo "baseline=$baseline" >> "$GITHUB_OUTPUT"
+          echo "Deployed commit: $sha (deploy finished at $baseline)"
 
       - name: Poll GitHub Pages build
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHA: ${{ steps.resolve.outputs.sha }}
+          BASELINE: ${{ steps.resolve.outputs.baseline }}
         run: |
+          baseline_ts=$(( $(date -u -d "$BASELINE" +%s) - 60 ))   # small clock-skew tolerance
           deadline=$((SECONDS + 600))   # 10 min timeout
           while true; do
-            if build=$(gh api "repos/${{ github.repository }}/pages/builds/latest" --jq '{status, commit}' 2>/dev/null); then
+            if build=$(gh api "repos/${{ github.repository }}/pages/builds/latest" --jq '{status, updated_at}' 2>/dev/null); then
               status=$(jq -r '.status' <<< "$build")
-              commit=$(jq -r '.commit' <<< "$build")
-              echo "Pages build: status=$status commit=$commit (target $SHA)"
-              if [ "$status" = "built" ] && [ "${commit:0:7}" = "${SHA:0:7}" ]; then
+              updated_at=$(jq -r '.updated_at' <<< "$build")
+              updated_ts=$(date -u -d "$updated_at" +%s)
+              echo "Pages build: status=$status updated_at=$updated_at (baseline $BASELINE)"
+              if [ "$status" = "built" ] && [ "$updated_ts" -ge "$baseline_ts" ]; then
                 echo "gh-pages build finished."
                 exit 0
               fi
