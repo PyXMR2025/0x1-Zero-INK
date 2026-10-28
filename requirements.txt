@@ -1,2 +1,0 @@
-# Static site generator — https://zensical.org/
-zensical==0.0.73
