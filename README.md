@@ -1,50 +1,45 @@
 # 0x1 ZeroINK
 
-> [Jackie](https://github.com/PyXMR2025)'s personal blog, built with [Zensical](https://zensical.org) and hosted on GitHub Pages and Cloudflare.
+> [Jackie](https://github.com/PyXMR2025)'s personal blog, built with [Hugo](https://gohugo.io/) + [PaperMod](https://github.com/adityatelange/hugo-PaperMod) and hosted on GitHub Pages and Cloudflare.
 
 **URL**: [https://blog.zjackie.ink](https://blog.zjackie.ink)
 
 [![License: Code MIT](https://img.shields.io/badge/License-Code%20MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![License: Content CC BY-SA 4.0](https://img.shields.io/badge/License-Content%20CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
-[![Deploy Status](https://github.com/PyXMR2025/0x1-Zero-INK/actions/workflows/deploy.yml/badge.svg)](https://github.com/PyXMR2025/0x1-Zero-INK/actions)
+[![Deploy Status](https://github.com/PyXMR2025/0x1-ZeroINK/actions/workflows/deploy.yml/badge.svg)](https://github.com/PyXMR2025/0x1-ZeroINK/actions)
 
 ## Local Development
 
-To run this blog locally, you need **Python 3.8+** installed.
+To run this blog locally, you need **Hugo (Extended edition)** installed.
 
-1. **Clone the repository**:
+1. **Clone the repository** (the theme is a Git submodule):
    ```bash
-   git clone https://github.com/PyXMR2025/0x1-ZeroINK.git
+   git clone --recurse-submodules https://github.com/PyXMR2025/0x1-ZeroINK.git
    cd 0x1-ZeroINK
    ```
-
-2. **Set up a virtual environment** *(Recommended, do not commit `.venv` to Git)*:
+   If you already cloned without submodules:
    ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   git submodule update --init --recursive
    ```
 
-3. **Install dependencies**:
+2. **Start the local preview server**:
    ```bash
-   pip install -r requirements.txt
+   hugo server -D
    ```
+   Open your browser and navigate to `http://localhost:1313`.
 
-4. **Start the local preview server**:
+3. **Create a new post**:
    ```bash
-   zensical serve
+   hugo new content content/posts/my-post.md
    ```
-   Open your browser and navigate to `http://127.0.0.1:8000`.
+   Set `draft: false` in the front matter when you're ready to publish.
 
-## Contributing & i18n (Internationalization)
+## Deployment
 
-Contributions are always welcome! If you'd like to help translate this blog into your native language or improve existing translations, please follow these simple steps:
+Every push to `main` triggers GitHub Actions to:
 
-1. **Locate the Language Directory**: Check the `docs/` directory. If your language folder (e.g., `docs/zh/`, `docs/ja/`) already exists, you can directly translate or update the Markdown files within it.
-2. **Add a New Language**: If your language is not yet supported, create a new folder using the standard [ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g., `docs/fr/` for French). Mirror the structure of the default language directory and translate the content.
-3. **Update Configuration**: If you are adding a completely new language, please also update the `zensical.toml` to register the new locale in the `i18n` plugin settings.
-4. **Submit a Pull Request**: Fork the repository, commit your changes, and open a Pull Request. Please include a brief description of the language and files you've worked on.
-
-> **Tip**: While AI translation tools are helpful, please ensure the final content is reviewed by a human for accuracy, context, and natural phrasing.
+1. Build the site with Hugo and publish it to the `gh-pages` branch (served at [blog.zjackie.ink](https://blog.zjackie.ink)).
+2. Submit the sitemap URLs to [IndexNow](https://www.indexnow.org/) for fast indexing.
 
 ## Support & Donate
 
@@ -84,7 +79,7 @@ SZY8BGnrKXhNVqjIpQHJ+4mXAYB7IQo=
 This project uses a **Dual License** approach to protect both the code and the content:
 
 - **Code & Infrastructure**: The build scripts, configuration files, and custom code are licensed under the [MIT License](LICENSE).
-- **Blog Content**: All original blog posts, articles, and media content (located in the `/docs` directory) are licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
+- **Blog Content**: All original blog posts, articles, and media content (located in the `/content` directory) are licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
 
 ---
 

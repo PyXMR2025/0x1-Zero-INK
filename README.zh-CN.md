@@ -1,46 +1,41 @@
 # 0x1 ZeroINK
 
-> Jackie 的个人博客，基于 [Zensical](https://zensical.org)构建，并托管于 GitHub Pages 与 Cloudflare。
+> Jackie 的个人博客，基于 [Hugo](https://gohugo.io/) + [PaperMod](https://github.com/adityatelange/hugo-PaperMod) 主题构建，并托管于 GitHub Pages 与 Cloudflare。
 
 **URL**: [https://blog.zjackie.ink](https://blog.zjackie.ink)
 
 ## 本地开发
 
-要在本地运行此博客，请确保您的环境中已安装 **Python 3.8 或更高版本**。
+要在本地运行此博客，请确保您的环境中已安装 **Hugo（Extended 版本）**。
 
-1. **克隆仓库**：
+1. **克隆仓库**（主题为 Git submodule）：
    ```bash
-   git clone https://github.com/PyXMR2025/0x1-ZeroINK.git
+   git clone --recurse-submodules https://github.com/PyXMR2025/0x1-ZeroINK.git
    cd 0x1-ZeroINK
    ```
-
-2. **配置虚拟环境**（强烈建议，请勿将 `.venv` 目录提交至 Git）：
+   如果克隆时未包含 submodule：
    ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate  # Windows 用户请使用: .venv\Scripts\activate
+   git submodule update --init --recursive
    ```
 
-3. **安装依赖**：
+2. **启动本地预览服务**：
    ```bash
-   pip install -r requirements.txt
+   hugo server -D
    ```
+   命令执行后，请在浏览器中访问 `http://localhost:1313` 即可查看博客效果。
 
-4. **启动本地预览服务**：
+3. **创建新文章**：
    ```bash
-   zensical serve
+   hugo new content content/posts/my-post.md
    ```
-   命令执行后，请在浏览器中访问 `http://127.0.0.1:8000` 即可查看博客效果。
+   准备发布时，将文章 Front Matter 中的 `draft` 设为 `false`。
 
-## 贡献与国际化 (i18n)
+## 部署
 
-我们随时欢迎社区贡献！如果您希望将此博客翻译成您的母语，或改进现有的翻译内容，请遵循以下简单步骤：
+每次推送到 `main` 分支都会触发 GitHub Actions：
 
-1. **定位语言目录**：检查 `docs/` 目录。如果目标语言的文件夹（例如 `docs/zh/`、`docs/ja/`）已存在，您可以直接在其中翻译或更新对应的 Markdown 文件。
-2. **添加新语言**：如果尚未支持您的语言，请使用标准的 [ISO 639-1 语言代码](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)创建一个新文件夹（例如法语为 `docs/fr/`）。请参照默认语言目录的结构，并翻译其中的内容。
-3. **更新配置文件**：若添加了全新的语言，请同步修改 `zensical.toml` 文件，在 `i18n` 插件的设置中注册该新语言。
-4. **提交 Pull Request**：Fork 本仓库，提交您的更改并发起 Pull Request。请在 PR 描述中简要说明您翻译的语言及涉及的文件。
-
-> **提示**：虽然 AI 翻译工具能提供很大帮助，但请务必进行**人工校对**，以确保译文在准确性、语境和表达习惯上自然流畅。
+1. 使用 Hugo 构建站点并发布到 `gh-pages` 分支（通过 [blog.zjackie.ink](https://blog.zjackie.ink) 访问）。
+2. 将站点地图 URL 提交至 [IndexNow](https://www.indexnow.org/)，实现快速收录。
 
 ## 支持与赞助
 
@@ -81,7 +76,7 @@ SZY8BGnrKXhNVqjIpQHJ+4mXAYB7IQo=
 本项目采用**双重许可 (Dual License)** 策略，以同时保护代码与内容：
 
 - **代码与基础设施**：构建脚本、配置文件及自定义代码均采用 [MIT 许可证](https://opensource.org/licenses/MIT)。
-- **博客内容**：所有原创博客文章、文本及媒体内容（位于 `/docs` 目录下）均采用 [知识共享 署名-相同方式共享 4.0 国际许可协议 (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/)。
+- **博客内容**：所有原创博客文章、文本及媒体内容（位于 `/content` 目录下）均采用 [知识共享 署名-相同方式共享 4.0 国际许可协议 (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/)。
 
 ---
 

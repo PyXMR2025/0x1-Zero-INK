@@ -24,18 +24,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
         with:
-          python-version: "3.x"
-          cache: pip
+          submodules: true
+          fetch-depth: 0
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Set up Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "latest"
+          extended: true
 
       - name: Build site
-        run: zensical build --clean
+        run: hugo --gc --minify --cleanDestinationDir
 
       - name: Check links with lychee
         uses: lycheeverse/lychee-action@v2
@@ -46,8 +46,8 @@ jobs:
             --max-concurrency 16
             --max-retries 2
             --timeout 30
-            --root-dir ${{ github.workspace }}/site
+            --root-dir ${{ github.workspace }}/public
             --exclude '^https?://(www\.)?example\.com'
-            "./site/**/*.html"
+            "./public/**/*.html"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

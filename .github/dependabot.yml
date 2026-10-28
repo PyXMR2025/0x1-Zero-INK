@@ -1,25 +1,19 @@
 version: 2
 updates:
-  - package-ecosystem: pip
+  - package-ecosystem: gitsubmodule
     directory: "/"
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "04:00"
-      timezone: Asia/Shanghai
+      timezone: Etc/UTC
     open-pull-requests-limit: 5
-    groups:
-      python-dependencies:
-        patterns:
-          - "*"
 
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "04:00"
-      timezone: Asia/Shanghai
+      timezone: Etc/UTC
     open-pull-requests-limit: 5
     groups:
       github-actions:

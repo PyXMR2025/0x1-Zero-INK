@@ -1,57 +1,10 @@
 # ==============================
-# Python
+# Hugo
 # ==============================
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-
-# Distribution / packaging
-*.egg-info/
-*.egg
-.eggs/
-build/
-dist/
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage
-.coverage
-.coverage.*
-htmlcov/
-.tox/
-.nox/
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
-.ruff_cache/
-.mypy_cache/
-.pyre/
-.pytype/
-*.manifest
-
-# ==============================
-# Virtual Environments
-# ==============================
-.venv/
-venv/
-env/
-ENV/
-env.bak/
-venv.bak/
-
-# ==============================
-# MkDocs / Zensical
-# ==============================
-# Build output (defaults to site/)
-site/
-
-# Build cache (zensical build --clean clears this)
-.cache/
-.zensical/
+# Build output
+public/
+resources/_gen/
+.hugo_build.lock
 
 # ==============================
 # Environment Variables
