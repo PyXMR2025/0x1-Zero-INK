@@ -40,7 +40,7 @@ jobs:
       - name: Check links with lychee
         uses: lycheeverse/lychee-action@v2
         with:
-          fail: false
+          fail: true
           args: >-
             --no-progress
             --max-concurrency 16
