@@ -1,6 +1,6 @@
 # 0x1 ZeroINK
 
-> [Jackie](https://github.com/PyXMR2025)'s personal blog, built with modern static site generators and hosted on GitHub Pages and Cloudflare.
+> [Jackie](https://github.com/PyXMR2025)'s personal blog, built with [Zensical](https://zensical.org) and hosted on GitHub Pages and Cloudflare.
 
 **URL**: [https://blog.zjackie.ink](https://blog.zjackie.ink)
 

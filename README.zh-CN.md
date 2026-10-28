@@ -1,6 +1,6 @@
 # 0x1 ZeroINK
 
-> Jackie 的个人博客，基于现代静态站点生成器构建，并托管于 GitHub Pages 与 Cloudflare。
+> Jackie 的个人博客，基于 [Zensical](https://zensical.org)构建，并托管于 GitHub Pages 与 Cloudflare。
 
 **URL**: [https://blog.zjackie.ink](https://blog.zjackie.ink)
 
