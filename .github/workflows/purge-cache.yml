@@ -1,4 +1,4 @@
-name: Purge Cache & Push IndexNow
+name: Purge Cache
 
 on:
   workflow_run:
@@ -14,7 +14,7 @@ permissions:
   pages: read
 
 concurrency:
-  group: post-deploy-${{ github.event.workflow_run.head_sha || github.run_id }}
+  group: purge-cache-${{ github.event.workflow_run.head_sha || github.run_id }}
   cancel-in-progress: true
 
 jobs:
@@ -149,90 +149,3 @@ jobs:
             fi
             echo "Purged batch $((i / 30 + 1)): ${#batch[@]} URLs"
           done
-
-  indexnow:
-    name: Submit sitemap URLs to IndexNow
-    needs: wait-for-pages
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ needs.wait-for-pages.outputs.sha }}
-          fetch-depth: 2
-
-      - name: Detect content changes
-        id: changes
-        shell: bash
-        run: |
-          if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
-            changed=$(git diff --name-only HEAD^ HEAD -- 'content/**' || true)
-          else
-            changed="content/**"
-          fi
-          if [ -z "$changed" ]; then
-            echo "No content changes in the deployed commit, skipping IndexNow."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "Content changes detected:"
-            echo "$changed"
-          fi
-
-      - name: Fetch sitemap and build URL list
-        id: urls
-        if: steps.changes.outputs.skip != 'true'
-        shell: bash
-        run: |
-          for i in 1 2 3 4 5; do
-            SITEMAP=$(curl -fsS "https://blog.zjackie.ink/sitemap.xml") && break
-            echo "Fetch failed (attempt $i), retrying in 20s..."
-            sleep 20
-          done
-
-          if [ -z "$SITEMAP" ]; then
-            echo "::error::Could not fetch sitemap.xml"
-            exit 1
-          fi
-
-          LIST=$(echo "$SITEMAP" | grep -oP '(?<=<loc>)[^<]+' | grep -v '/404' | jq -R . | jq -sc .)
-
-          if [ "$LIST" = "[]" ]; then
-            echo "::error::No URLs found in sitemap.xml"
-            exit 1
-          fi
-
-          echo "list=$LIST" >> "$GITHUB_OUTPUT"
-          echo "$LIST" | jq -r '.[]' | while read -r u; do echo "Queued: $u"; done
-
-      - name: Submit to IndexNow
-        if: steps.changes.outputs.skip != 'true'
-        env:
-          INDEX_NOW_API_KEY: ${{ secrets.INDEX_NOW_API_KEY }}
-          URL_LIST: ${{ steps.urls.outputs.list }}
-        run: |
-          if [ -z "$INDEX_NOW_API_KEY" ]; then
-            echo "::error::Secret INDEX_NOW_API_KEY is empty. Set it in Settings → Secrets and variables → Actions (repository secrets, not environment secrets)."
-            exit 1
-          fi
-          echo "Key length: ${#INDEX_NOW_API_KEY}"
-          echo "URL count: $(jq length <<< "$URL_LIST")"
-
-          jq -n \
-            --arg host "blog.zjackie.ink" \
-            --arg key "$INDEX_NOW_API_KEY" \
-            --arg keyLocation "https://blog.zjackie.ink/${INDEX_NOW_API_KEY}.txt" \
-            --argjson urlList "$URL_LIST" \
-            '{host: $host, key: $key, keyLocation: $keyLocation, urlList: $urlList}' > payload.json
-
-          response=$(curl -sS -w "\n%{http_code}" -X POST "https://api.indexnow.org/indexnow" \
-            -H "Content-Type: application/json; charset=utf-8" \
-            --data-binary @payload.json)
-
-          body=$(echo "$response" | head -n -1)
-          code=$(echo "$response" | tail -n 1)
-          echo "IndexNow response ($code): $body"
-
-          case "$code" in
-            200|202) echo "Submitted successfully." ;;
-            *) echo "::error::IndexNow submission failed with HTTP $code"; exit 1 ;;
-          esac
