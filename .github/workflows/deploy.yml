@@ -46,3 +46,61 @@ jobs:
           commit_message: "deploy: ${{ github.sha }}"
           # Uncomment when the custom domain is configured in GitHub Pages:
           cname: blog.zjackie.ink
+
+      - name: Purge Cloudflare cache
+        if: success()
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          BASE_URL: https://blog.zjackie.ink
+        run: |
+          set -euo pipefail
+
+          urls=()
+
+          # 1. All HTML files from the build output
+          while IFS= read -r -d '' f; do
+            path="${f#public/}"
+            urls+=("$BASE_URL/$path")
+            # Also purge the pretty directory URL for index.html pages
+            if [[ "$path" == */index.html ]]; then
+              dir="${path%/index.html}"
+              urls+=("$BASE_URL/${dir:+$dir/}")
+            elif [[ "$path" == "index.html" ]]; then
+              urls+=("$BASE_URL/")
+            fi
+          done < <(find public -type f -name '*.html' -print0)
+
+          # 2. Files changed in this push (map repo paths to site URLs)
+          before="${{ github.event.before }}"
+          if [[ -n "$before" && "$before" != "0000000000000000000000000000000000000000" ]]; then
+            while IFS= read -r f; do
+              [[ -z "$f" ]] && continue
+              rel="$f"
+              [[ "$rel" == static/* ]] && rel="${rel#static/}"
+              if [[ -f "public/$rel" ]]; then
+                urls+=("$BASE_URL/$rel")
+              fi
+            done < <(git diff --name-only "$before" "${{ github.sha }}")
+          fi
+
+          # De-duplicate
+          mapfile -t urls < <(printf '%s\n' "${urls[@]}" | sort -u)
+          echo "Purging ${#urls[@]} URLs"
+
+          # Purge in batches of 30 (Cloudflare API limit per request)
+          for ((i = 0; i < ${#urls[@]}; i += 30)); do
+            batch=("${urls[@]:i:30}")
+            json=$(printf '%s\n' "${batch[@]}" | jq -R . | jq -cs '{files: .}')
+            response=$(curl -sS -X POST \
+              "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/purge_cache" \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              --data "$json")
+            if [[ "$(echo "$response" | jq -r '.success')" != "true" ]]; then
+              echo "::error::Cloudflare cache purge failed: $response"
+              exit 1
+            fi
+            echo "Purged batch $((i / 30 + 1)): ${#batch[@]} URLs"
+          done
