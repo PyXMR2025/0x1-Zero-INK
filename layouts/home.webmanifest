@@ -1,6 +1,10 @@
 {
-  "name": "0x1 ZeroINK",
+  "name": {{ site.Title | jsonify }},
   "short_name": "ZeroINK",
+  "description": {{ site.Params.description | jsonify }},
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

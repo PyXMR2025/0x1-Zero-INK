@@ -18,7 +18,18 @@ enableGitInfo = true
   posts = "/posts/:slug/"
 
 [outputs]
-  home = ["HTML", "RSS", "JSON"]
+  home = ["HTML", "RSS", "JSON", "WebAppManifest"]
+
+[mediaTypes]
+  [mediaTypes."application/manifest+json"]
+    suffixes = ["webmanifest"]
+
+[outputFormats]
+  [outputFormats.WebAppManifest]
+    mediaType = "application/manifest+json"
+    baseName = "site"
+    isPlainText = true
+    notAlternative = true
 
 [menu]
   [[menu.main]]
