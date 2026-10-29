@@ -34,13 +34,6 @@ To run this blog locally, you need **Hugo (Extended edition)** installed.
    ```
    Set `draft: false` in the front matter when you're ready to publish.
 
-## Deployment
-
-Every push to `main` triggers GitHub Actions to:
-
-1. Build the site with Hugo and publish it to the `gh-pages` branch (served at [blog.zjackie.ink](https://blog.zjackie.ink)).
-2. Submit the sitemap URLs to [IndexNow](https://www.indexnow.org/) for fast indexing.
-
 ## Support & Donate
 
 If you find this blog helpful or enjoy the content, consider supporting my work! Your contributions help keep the infrastructure running and fuel future open-source projects.
