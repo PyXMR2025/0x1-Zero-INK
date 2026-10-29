@@ -30,13 +30,6 @@
    ```
    准备发布时，将文章 Front Matter 中的 `draft` 设为 `false`。
 
-## 部署
-
-每次推送到 `main` 分支都会触发 GitHub Actions：
-
-1. 使用 Hugo 构建站点并发布到 `gh-pages` 分支（通过 [blog.zjackie.ink](https://blog.zjackie.ink) 访问）。
-2. 将站点地图 URL 提交至 [IndexNow](https://www.indexnow.org/)，实现快速收录。
-
 ## 支持与赞助
 
 如果您觉得这个博客对您有帮助，或者喜欢这里的内容，欢迎考虑支持我的工作！您的赞助将帮助维持基础设施的运转，并为未来的开源项目提供动力。
