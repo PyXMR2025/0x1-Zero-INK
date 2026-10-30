@@ -58,7 +58,7 @@ enableGitInfo = true
   description = "Jackie's personal blog"
   author = "Jackie"
 
-  defaultTheme = "auto"
+  defaultTheme = "dark"
   disableThemeToggle = false
 
   ShowReadingTime = true
