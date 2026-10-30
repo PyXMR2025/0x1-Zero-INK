@@ -76,10 +76,6 @@ enableGitInfo = true
     Text = "Suggest Changes"
     appendFilePath = true
 
-  [params.assets]
-    theme_color = "#ffffff"
-    msapplication_TileColor = "#000000"
-
   [[params.socialIcons]]
     name = "github"
     url = "https://github.com/PyXMR2025/0x1-ZeroINK"
