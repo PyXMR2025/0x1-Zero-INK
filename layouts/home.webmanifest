@@ -33,5 +33,21 @@
   ],
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "display": "standalone"
+  "display": "standalone",
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "0x1 ZeroINK blog post on desktop"
+    },
+    {
+      "src": "/screenshots/screenshot-mobile.png",
+      "sizes": "1170x1992",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "0x1 ZeroINK blog post on mobile"
+    }
+  ]
 }
