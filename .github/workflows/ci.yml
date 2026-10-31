@@ -34,8 +34,31 @@ jobs:
       - name: Build site
         run: hugo --gc --minify --cleanDestinationDir
 
+      - name: Minify static JS/CSS
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s globstar nullglob
+
+          # Hugo already minifies rendered HTML/XML/JSON and every asset that
+          # goes through its resource pipeline. Files copied verbatim from
+          # static/ (e.g. sw.js) are left untouched, so minify them here.
+          # Fingerprinted bundles are skipped: their SRI hashes are embedded
+          # in the HTML and would break if their content changed.
+          for f in public/**/*.js public/**/*.css; do
+            if [[ "$f" =~ \.[0-9a-f]{32,}\.(js|css)$ ]]; then
+              continue
+            fi
+            echo "Minifying $f"
+            npx --yes esbuild@0.25.0 "$f" --minify --outfile="$f" --allow-overwrite
+          done
+
       - name: Verify build output
-        run: test -f public/index.html
+        run: |
+          test -f public/index.html
+          test -f public/sw.js
+          # Minified output must be a single line
+          test "$(wc -l < public/sw.js | tr -d ' ')" -le 1
 
   markdown-lint:
     name: Markdown lint
