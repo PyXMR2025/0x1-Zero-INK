@@ -1,4 +1,17 @@
 {{- /* Extra favicons */}}
-<link rel="manifest" href="{{ "site.webmanifest" | absURL }}">
-<link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | absURL }}">
+<link rel="icon" type="image/svg+xml" sizes="any" href="{{ "favicon.svg" | absURL }}">
 <link rel="icon" type="image/png" sizes="96x96" href="{{ "favicon-96x96.png" | absURL }}">
+<link rel="manifest" href="{{ "site.webmanifest" | absURL }}">
+<meta name="apple-mobile-web-app-title" content="{{ site.Title }}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+{{- if eq site.Params.env "production" }}
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("{{ "sw.js" | absURL }}");
+    });
+  }
+</script>
+{{- end }}
